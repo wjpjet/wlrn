@@ -53,11 +53,16 @@ return function()
 	-- generate negatives bag table: Random sampling until len pos (requires large neg set)
 	--
 	local p_neg = io.popen('ls ' .. folder_neg .. '/*.jpg')
+	local p_neg_lines = {} -- make a table with paths to files
+	for line in p_neg:lines() do
+		table.insert(p_neg_lines, line)
+	end
+
 	local count = #bags_pos
 	while count > 0 do
 		
 		--randomly select a negative
-		local path = p_neg[(math.random(1, #p_neg)]
+		local path = p_neg_lines[math.random(1, #p_neg_lines)]
 
 		-- load image data
 		local data = image.load(path, nchannels, 'byte')
