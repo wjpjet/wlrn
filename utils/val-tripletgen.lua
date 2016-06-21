@@ -17,6 +17,9 @@ return function()
 	--
 	-- generate positive bag table: ~33% of data
 	--
+	
+	--print(" ")
+	--print(" -- Printing Pos Load Data (val) -- ")
 	local p_pos = io.popen('ls ' .. folder_pos .. '/*.jpg')
 	for path in p_pos:lines() do
 		--
@@ -25,6 +28,7 @@ return function()
 			--
 
 			-- load image data
+			--io.write("\tPath: ", path, "\n")
 			local data = image.load(path, nchannels, 'byte')
 
 			if 1==nchannels then
@@ -57,7 +61,9 @@ return function()
 	for line in p_neg:lines() do
 		table.insert(p_neg_lines, line)
 	end
-
+	
+	--print(" ")
+	--print(" -- Printing Neg Load Data (val)-- ")
 	local count = #bags_pos
 	while count > 0 do
 		
@@ -65,6 +71,7 @@ return function()
 		local path = p_neg_lines[math.random(1, #p_neg_lines)]
 
 		-- load image data
+		--io.write("\tPath: ", path, "\n")
 		local data = image.load(path, nchannels, 'byte')
 
 		if 1==nchannels then
@@ -90,7 +97,7 @@ return function()
 	p_neg:close()
 	
 	--shuffle positives
-	local n = math.min(n, #bags_pos)
+	local n = #bags_pos
 	local p = torch.randperm(#bags_pos)  --array of random num length of bags_pos
 	local bags_pos_shuffled = {}
 
@@ -99,7 +106,7 @@ return function()
 		local bag = {}
 
 		--bag.label = bags[ p[i] ].label
-		bag.data = bags[ p[i] ].data
+		bag.data = bags_pos[ p[i] ].data
 		bags_pos_shuffled[1+#bags_pos_shuffled] = bag
 	end
 
